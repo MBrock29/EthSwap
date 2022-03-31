@@ -27,10 +27,10 @@ export const App = () => {
     const _ethBalance = await web3.eth.getBalance(accounts[0]);
     setEthBalance(_ethBalance);
     setAccount(accounts[0]);
-
+    console.log(accounts);
     const networkId = await web3.eth.net.getId();
     const tokenData = Token.networks[networkId];
-    console.log(tokenData);
+
     if (tokenData) {
       const tokenContract = new web3.eth.Contract(Token.abi, tokenData.address);
       setToken(tokenContract);
