@@ -9,7 +9,7 @@ import "./App.css";
 export const App = () => {
   const [account, setAccount] = useState("");
   const [ethBalance, setEthBalance] = useState("");
-  const [token, setToken] = useState("");
+  const [tokenContract, setTokenContract] = useState("");
   const [tokenBalance, setTokenBalance] = useState("");
   const [ethSwap, setEthSwap] = useState("");
   const [loading, setLoading] = useState(true);
@@ -32,12 +32,12 @@ export const App = () => {
     const tokenData = Token.networks[networkId];
 
     if (tokenData) {
-      const tokenContract = new web3.eth.Contract(Token.abi, tokenData.address);
-      setToken(tokenContract);
-      let tokenBalance = await token.methods.balanceOf(accounts[0]).call();
-      setTokenBalance(tokenBalance.toString());
+      const token = new web3.eth.Contract(Token.abi, tokenData.address);
+      setTokenContract(token);
+      let tokenBalanceData = await token.methods.balanceOf(accounts[0]).call();
+      setTokenBalance(tokenBalanceData.toString());
     } else {
-      window.alert("Token contract not deployed to detected network.");
+      window.alert("Token contract not deployed to connected network");
     }
     const ethSwapData = EthSwap.networks[networkId];
     if (ethSwapData) {
@@ -74,7 +74,7 @@ export const App = () => {
   };
   const sellTokens = (tokenAmount) => {
     setLoading(true);
-    token.methods
+    tokenContract.methods
       .approve(ethSwap.address, tokenAmount)
       .send({ from: account })
       .on("transactionHash", (hash) => {
